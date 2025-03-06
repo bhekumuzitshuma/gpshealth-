@@ -1,7 +1,7 @@
 import * as React from "react";
-
+import { usePathname } from "next/navigation"; // Import usePathname
 import { SearchForm } from "@/components/search-form";
-import { VersionSwitcher } from "@/components/version-switcher";
+import { HomeButton } from "./version-switcher";
 import {
   Sidebar,
   SidebarContent,
@@ -15,132 +15,73 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 
-// This is sample data.
+// Sample data
 const data = {
   versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
   navMain: [
     {
-      title: "Getting Started",
+      title: "Livestock Monitoring",
       url: "#",
       items: [
         {
-          title: "Installation",
-          url: "#",
+          title: "Dashboard",
+          url: "/dashboard",
         },
         {
-          title: "Project Structure",
-          url: "#",
+          title: "Livestock Management",
+          url: "/dashboard/livestock-monitoring/livestock-management",
+        },
+        {
+          title: "Health Tracking",
+          url: "/dashboard/livestock-monitoring/health-tracking",
+        },
+        {
+          title: "Movement Tracking",
+          url: "/dashboard/livestock-monitoring/movement-tracking",
+        },
+        {
+          title: "Feeding Schedule",
+          url: "/dashboard/livestock-monitoring/feeding-schedule",
         },
       ],
     },
     {
-      title: "Building Your Application",
+      title: "Alerts & Notifications",
       url: "#",
       items: [
         {
-          title: "Routing",
-          url: "#",
+          title: "Health Alerts",
+          url: "/dashboard/alerts/health-alerts",
         },
         {
-          title: "Data Fetching",
-          url: "#",
-          isActive: true,
+          title: "Movement Alerts",
+          url: "/dashboard/alerts/movement-alerts",
         },
         {
-          title: "Rendering",
-          url: "#",
+          title: "Feeding Reminders",
+          url: "/dashboard/alerts/feeding-reminders",
         },
         {
-          title: "Caching",
-          url: "#",
-        },
-        {
-          title: "Styling",
-          url: "#",
-        },
-        {
-          title: "Optimizing",
-          url: "#",
-        },
-        {
-          title: "Configuring",
-          url: "#",
-        },
-        {
-          title: "Testing",
-          url: "#",
-        },
-        {
-          title: "Authentication",
-          url: "#",
-        },
-        {
-          title: "Deploying",
-          url: "#",
-        },
-        {
-          title: "Upgrading",
-          url: "#",
-        },
-        {
-          title: "Examples",
-          url: "#",
+          title: "Environmental Alerts",
+          url: "/dashboard/alerts/environmental-alerts",
         },
       ],
     },
     {
-      title: "API Reference",
+      title: "Reports & Insights",
       url: "#",
       items: [
         {
-          title: "Components",
-          url: "#",
+          title: "Health Report",
+          url: "/dashboard/reports/health-report",
         },
         {
-          title: "File Conventions",
-          url: "#",
+          title: "Movement Report",
+          url: "/dashboard/reports/movement-report",
         },
         {
-          title: "Functions",
-          url: "#",
-        },
-        {
-          title: "next.config.js Options",
-          url: "#",
-        },
-        {
-          title: "CLI",
-          url: "#",
-        },
-        {
-          title: "Edge Runtime",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Architecture",
-      url: "#",
-      items: [
-        {
-          title: "Accessibility",
-          url: "#",
-        },
-        {
-          title: "Fast Refresh",
-          url: "#",
-        },
-        {
-          title: "Next.js Compiler",
-          url: "#",
-        },
-        {
-          title: "Supported Browsers",
-          url: "#",
-        },
-        {
-          title: "Turbopack",
-          url: "#",
+          title: "Feeding Insights",
+          url: "/dashboard/reports/feeding-insights",
         },
       ],
     },
@@ -148,25 +89,26 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname(); // Get the current pathname
+
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <VersionSwitcher
-          versions={data.versions}
-          defaultVersion={data.versions[0]}
-        />
+        <HomeButton />
         <SearchForm />
       </SidebarHeader>
       <SidebarContent>
-        {/* We create a SidebarGroup for each parent. */}
-        {data.navMain.map((item) => (
-          <SidebarGroup key={item.title}>
-            <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
+        {data.navMain.map((group) => (
+          <SidebarGroup key={group.title}>
+            <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {item.items.map((item) => (
+                {group.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={item.isActive}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={pathname === item.url} // Check if the item is active
+                    >
                       <a href={item.url}>{item.title}</a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
